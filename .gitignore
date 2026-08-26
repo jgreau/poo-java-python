@@ -1,0 +1,12 @@
+# Java
+*.class
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Editores
+.idea/
+.vscode/
+*.swp
+.DS_Store

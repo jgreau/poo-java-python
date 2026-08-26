@@ -1,0 +1,813 @@
+<title>Dos lenguajes, un concepto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --ground:#F4F6F8;
+  --surface:#FFFFFF;
+  --surface-2:#EAEDF1;
+  --ink:#14171C;
+  --ink-2:#4A525F;
+  --ink-3:#7C8595;
+  --rule:#D8DDE4;
+  --rule-soft:#E6EAEF;
+  --java:#A65416;
+  --java-soft:#F6EBE1;
+  --py:#2A5FB4;
+  --py-soft:#E3EAF6;
+  --code-bg:#F8F9FB;
+  --kw:#8A3FA8;
+  --str:#297049;
+  --com:#8B95A3;
+  --typ:#1F5C7A;
+  --num:#9A4A1E;
+  --shadow:0 1px 2px rgba(20,23,28,.05), 0 8px 24px -16px rgba(20,23,28,.30);
+
+  --f-display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#101318; --surface:#171B21; --surface-2:#1F242C;
+    --ink:#E9EDF2; --ink-2:#A8B2C0; --ink-3:#78828F;
+    --rule:#2A313A; --rule-soft:#222831;
+    --java:#E0955A; --java-soft:#2A2018;
+    --py:#7FAAEA; --py-soft:#171F2C;
+    --code-bg:#12161B;
+    --kw:#C99BE0; --str:#7FC79B; --com:#6B7482; --typ:#7FBEDC; --num:#E0A276;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101318; --surface:#171B21; --surface-2:#1F242C;
+  --ink:#E9EDF2; --ink-2:#A8B2C0; --ink-3:#78828F;
+  --rule:#2A313A; --rule-soft:#222831;
+  --java:#E0955A; --java-soft:#2A2018;
+  --py:#7FAAEA; --py-soft:#171F2C;
+  --code-bg:#12161B;
+  --kw:#C99BE0; --str:#7FC79B; --com:#6B7482; --typ:#7FBEDC; --num:#E0A276;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1140px; margin:0 auto; padding:0 24px}
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; line-height:1.12; letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--py); outline-offset:3px; border-radius:3px}
+
+/* ---------- nav ---------- */
+nav{
+  position:sticky; top:0; z-index:20;
+  background:var(--ground);
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--rule);
+}
+.nav-in{max-width:1140px; margin:0 auto; padding:11px 24px; display:flex; align-items:center; gap:20px}
+.nav-mark{font-family:var(--f-mono); font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); white-space:nowrap}
+.nav-links{display:flex; gap:4px; overflow-x:auto; margin-left:auto; scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+  font-family:var(--f-mono); font-size:12px; text-decoration:none; color:var(--ink-3);
+  padding:5px 9px; border-radius:5px; white-space:nowrap; transition:color .15s, background .15s;
+}
+.nav-links a:hover{color:var(--ink); background:var(--surface-2)}
+
+/* ---------- hero ---------- */
+header{padding:76px 0 52px}
+.eyebrow{
+  font-family:var(--f-mono); font-size:12px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); margin-bottom:20px;
+}
+h1{font-size:clamp(40px,6.6vw,74px); max-width:16ch}
+h1 .j{color:var(--java)}
+h1 .p{color:var(--py)}
+.lede{margin-top:24px; font-size:20px; color:var(--ink-2); max-width:60ch}
+.stats{display:flex; flex-wrap:wrap; gap:34px; margin-top:38px; padding-top:26px; border-top:1px solid var(--rule)}
+.stat b{display:block; font-family:var(--f-display); font-size:32px; font-weight:800; line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3)}
+
+/* ---------- sections ---------- */
+section{padding:26px 0 56px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px; padding-bottom:14px; border-bottom:2px solid var(--ink)}
+.sec-head h2{font-size:clamp(23px,2.7vw,31px)}
+.sec-head .tag{margin-left:auto; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
+.sec-note{color:var(--ink-2); margin:18px 0 30px; max-width:66ch}
+
+/* ---------- demo card ---------- */
+.demo{background:var(--surface); border:1px solid var(--rule); border-radius:12px; margin-bottom:26px; overflow:hidden; box-shadow:var(--shadow)}
+.demo-top{padding:22px 26px 20px; border-bottom:1px solid var(--rule-soft)}
+.demo-n{font-family:var(--f-mono); font-size:12px; font-weight:700; color:var(--ink-3); letter-spacing:.06em}
+.demo h3{font-size:22px; margin:7px 0 10px}
+.demo-sub{color:var(--ink-2); font-size:16.5px; max-width:70ch}
+.aha{
+  display:flex; gap:11px; align-items:flex-start; margin-top:16px; padding:12px 15px;
+  background:var(--surface-2); border-radius:8px; font-size:15.5px; color:var(--ink-2); max-width:78ch;
+}
+.aha b{font-family:var(--f-mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); flex:none; padding-top:3px}
+
+/* ---------- side by side ---------- */
+.pair{display:grid; grid-template-columns:1fr 1fr}
+.pane{min-width:0; border-top:3px solid transparent}
+.pane.java{border-top-color:var(--java); background:var(--code-bg)}
+.pane.py{border-top-color:var(--py); background:var(--code-bg); border-left:1px solid var(--rule-soft)}
+.pane-lbl{
+  display:flex; align-items:center; gap:8px; padding:9px 18px; flex-wrap:wrap;
+  font-family:var(--f-mono); font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  border-bottom:1px solid var(--rule-soft);
+}
+.pane.java .pane-lbl{color:var(--java); background:var(--java-soft)}
+.pane.py .pane-lbl{color:var(--py); background:var(--py-soft)}
+.dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+.fname{margin-left:auto; text-transform:none; letter-spacing:0; font-weight:400; opacity:.72; font-size:11px}
+pre{margin:0; padding:17px 18px 19px; overflow-x:auto; font-family:var(--f-mono); font-size:13px; line-height:1.62; tab-size:2}
+code{font-family:var(--f-mono)}
+.tk-com{color:var(--com); font-style:italic}
+.tk-str{color:var(--str)}
+.tk-kw{color:var(--kw); font-weight:700}
+.tk-typ{color:var(--typ)}
+.tk-num{color:var(--num)}
+.tk-dec{color:var(--num); font-weight:700}
+.pane.java .tk-self{color:var(--java); font-weight:700}
+.pane.py .tk-self{color:var(--py); font-weight:700}
+
+/* ---------- table ---------- */
+.tbl-scroll{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:12px; box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; min-width:720px; font-size:15px}
+th,td{text-align:left; padding:11px 18px; border-bottom:1px solid var(--rule-soft); vertical-align:top}
+thead th{
+  position:sticky; top:0; background:var(--surface); z-index:1;
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+  border-bottom:2px solid var(--rule);
+}
+thead th.cj{color:var(--java)} thead th.cp{color:var(--py)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-2)}
+td.concept{font-weight:600; width:23%}
+td.cj,td.cp{font-family:var(--f-mono); font-size:12.5px; width:28.5%}
+td.cj{color:var(--java)} td.cp{color:var(--py)}
+td.why{color:var(--ink-2); font-size:14px}
+
+/* ---------- exercise grid ---------- */
+.ex-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:14px}
+.ex{background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:18px 20px}
+.ex .k{font-family:var(--f-mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:8px}
+.ex h4{font-family:var(--f-display); font-weight:600; font-size:17px; margin:0 0 7px; line-height:1.25}
+.ex p{font-size:14.5px; color:var(--ink-2)}
+
+/* ---------- steps ---------- */
+.steps{display:grid; gap:12px; counter-reset:s}
+.step{
+  display:grid; grid-template-columns:38px 1fr; gap:16px; align-items:start;
+  background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:16px 20px;
+}
+.step-n{
+  font-family:var(--f-mono); font-size:13px; font-weight:700; color:var(--ink-3);
+  border-right:1px solid var(--rule); padding-right:14px; padding-top:2px; font-variant-numeric:tabular-nums;
+}
+.step h4{font-family:var(--f-display); font-weight:600; font-size:17px; margin:0 0 4px}
+.step p{font-size:14.5px; color:var(--ink-2)}
+
+/* ---------- run box ---------- */
+.run{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.runbox{border-radius:10px; padding:17px 20px; border:1px solid var(--rule); background:var(--surface)}
+.runbox .rl{font-family:var(--f-mono); font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:8px}
+.runbox.j .rl{color:var(--java)} .runbox.p .rl{color:var(--py)}
+.runbox code{display:block; font-size:12.5px; background:var(--code-bg); border:1px solid var(--rule-soft); border-radius:6px; padding:10px 12px; overflow-x:auto; white-space:pre; color:var(--ink-2)}
+.runbox small{display:block; margin-top:9px; color:var(--ink-3); font-size:13px}
+
+footer{border-top:1px solid var(--rule); margin-top:34px; padding:30px 0 60px; color:var(--ink-3); font-size:14px}
+footer b{color:var(--ink-2)}
+
+@media (max-width:800px){
+  .pair{grid-template-columns:1fr}
+  .pane.py{border-left:none; border-top:3px solid var(--py)}
+  .run{grid-template-columns:1fr}
+  header{padding:52px 0 40px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+
+<nav>
+  <div class="nav-in">
+    <span class="nav-mark">POO · Java ↔ Python</span>
+    <div class="nav-links">
+      <a href="#archivos">Archivos</a>
+      <a href="#d1">01 Objetos</a>
+      <a href="#d2">02 Encapsular</a>
+      <a href="#d3">03 Herencia</a>
+      <a href="#d4">04 Polimorfismo</a>
+      <a href="#d5">05 Static</a>
+      <a href="#d6">06 equals</a>
+      <a href="#d7">07 Interfaces</a>
+      <a href="#d8">08 Mario</a>
+      <a href="#tabla">Tabla</a>
+      <a href="#ejercicios">Ejercicios</a>
+      <a href="#clase">En clase</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Material de clase · Programación Orientada a Objetos</p>
+  <h1>Dos lenguajes,<br>un solo <span class="j">con</span><span class="p">cepto</span></h1>
+  <p class="lede">Seis demos ejecutables escritas dos veces &mdash; en Java y en Python &mdash; con la misma salida por pantalla. Cada clase vive en su propio archivo, como en cualquier proyecto real. Cuando el alumno ve correr los dos programas lado a lado, entiende que no está aprendiendo dos cosas: está aprendiendo una, escrita de dos maneras.</p>
+  <div class="stats">
+    <div class="stat"><b>8</b><span>demos</span></div>
+    <div class="stat"><b>84</b><span>archivos, una clase c/u</span></div>
+    <div class="stat"><b>63</b><span>ejercicios</span></div>
+    <div class="stat"><b>0</b><span>dependencias</span></div>
+  </div>
+</header>
+
+<section id="archivos">
+  <div class="sec-head">
+    <h2>Una clase, un archivo</h2>
+    <span class="tag">hoja 00 · 15 minutos</span>
+  </div>
+  <p class="sec-note">La estructura es la de un proyecto real: cada clase en su archivo, y un archivo aparte con el <code>main()</code>. Dos reglas que conviene dejar zanjadas el primer día, porque explican la mitad de los errores del semestre.</p>
+
+  <div class="pair" style="border:1px solid var(--rule); border-radius:12px; overflow:hidden; box-shadow:var(--shadow)">
+    <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">03-herencia/java/</span></div><pre><code data-lang="java">Vehiculo.java     el padre
+Auto.java         hijo
+Moto.java         hijo
+Demo03.java       el programa, con main()
+
+// El archivo se llama EXACTAMENTE igual
+// que la clase publica que contiene.
+// Perro.java  ->  public class Perro
+
+// Y no hace falta ningun import:
+// misma carpeta = mismo paquete.</code></pre></div>
+    <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">03-herencia/python/</span></div><pre><code data-lang="py">vehiculo.py       el padre
+auto.py           hijo
+moto.py           hijo
+demo03.py         el programa
+
+# El archivo puede llamarse como quieras,
+# pero la costumbre (PEP 8) es:
+#   archivo -> minusculas_con_guion_bajo
+#   clase   -> CamelCase
+
+from vehiculo import Vehiculo   # SIEMPRE hace falta</code></pre></div>
+  </div>
+
+  <div class="ex-grid" style="margin-top:22px">
+    <div class="ex"><span class="k">Java obliga</span><h4>El nombre del archivo es parte del código</h4><p>Renombrar la clase y no el archivo produce un error explícito: <code>class Perrito is public, should be declared in a file named Perrito.java</code>. Es el ejercicio E0.1.</p></div>
+    <div class="ex"><span class="k">Python no obliga</span><h4>Pero la convención manda</h4><p>El archivo y la clase pueden llamarse distinto y Python no se queja. La costumbre es <code>cuenta_bancaria.py</code> con <code>class CuentaBancaria</code>.</p></div>
+    <div class="ex"><span class="k">La sorpresa</span><h4>Los imports</h4><p>Java ve solo todas las clases de la carpeta. Python necesita que le digas de qué archivo sacar cada cosa, siempre. Borrar el import da <code>NameError</code>.</p></div>
+    <div class="ex"><span class="k">Quinto movimiento</span><h4>Crear una clase es crear un archivo</h4><p>Se suma a los cuatro de siempre: archivo nuevo, nombre correcto, recompilar &mdash; y en Python, agregar el import donde se use.</p></div>
+  </div>
+</section>
+
+<section id="demos">
+  <div class="sec-head">
+    <h2>Las ocho demos</h2>
+    <span class="tag">extracto de cada par</span>
+  </div>
+  <p class="sec-note">Cada tarjeta muestra el fragmento donde los dos lenguajes se separan. Los archivos completos, con comentarios línea por línea y su hoja de ejercicios, están en las carpetas numeradas. La demo 8 es la excepción: es el cierre del curso de Java y va sin par en Python.</p>
+
+  <article class="demo" id="d1">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 01</span>
+      <h3>Clases y objetos</h3>
+      <p class="demo-sub">La clase es el molde; el objeto es cada galleta. El molde no se come, las galletas sí. Atributos, métodos, constructor y la palabra que lo sostiene todo: <code>this</code> / <code>self</code>.</p>
+      <div class="aha"><b>Momento ajá</b><span>Dos objetos salidos del mismo molde son independientes: le cambias la edad a uno y el otro ni se entera.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Perro.java · Demo01.java</span></div><pre><code data-lang="java">// ===== Perro.java =====
+public class Perro {
+    public String nombre;   // hay que declararlo
+    public int edad;
+
+    public Perro(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+    public void ladrar() {
+        System.out.println(this.nombre + " dice: Guau!");
+    }
+}
+
+// ===== Demo01.java =====   (sin import: misma carpeta)
+public class Demo01 {
+    public static void main(String[] args) {
+        Perro firulais = new Perro("Firulais", 3);
+        firulais.ladrar();
+    }
+}</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">perro.py · demo01.py</span></div><pre><code data-lang="py"># ===== perro.py =====
+class Perro:
+    # los atributos NO se declaran:
+    # nacen al asignarlos en __init__
+    def __init__(self, nombre, edad):
+        self.nombre = nombre
+        self.edad = edad
+
+    def ladrar(self):
+        print(f"{self.nombre} dice: Guau!")
+
+
+# ===== demo01.py =====
+from perro import Perro     # aqui SI hace falta
+
+if __name__ == "__main__":
+    firulais = Perro("Firulais", 3)   # sin "new"
+    firulais.ladrar()</code></pre></div>
+    </div>
+  </article>
+
+  <article class="demo" id="d2">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 02</span>
+      <h3>Encapsulamiento</h3>
+      <p class="demo-sub">Un atributo público es la caja registradora abierta; uno privado obliga a pasar por el cajero. La cuenta valida cada depósito y cada giro, y no expone un <code>setSaldo()</code> jamás.</p>
+      <div class="aha"><b>Momento ajá</b><span>Java <em>prohíbe</em> con el compilador. Python solo <em>avisa</em>: <code>__saldo</code> se renombra a <code>_CuentaBancaria__saldo</code> y sigue ahí, a la vista de quien lo busque.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">CuentaBancaria.java</span></div><pre><code data-lang="java">class CuentaBancaria {
+    private int saldo;      // privacidad REAL
+
+    public int getSaldo() {
+        return this.saldo;
+    }
+    // no existe setSaldo(): el saldo solo
+    // cambia con reglas de negocio
+    public void girar(int monto) {
+        if (monto &gt; this.saldo) {
+            System.out.println("Saldo insuficiente");
+            return;
+        }
+        this.saldo -= monto;
+    }
+}
+// cuenta.saldo = 999999;  &lt;- NO COMPILA</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">cuenta_bancaria.py</span></div><pre><code data-lang="py">class CuentaBancaria:
+    def __init__(self, saldo):
+        self.__saldo = saldo    # name mangling
+
+    @property                   # se lee como atributo,
+    def saldo(self):            # pero ejecuta el metodo
+        return self.__saldo
+    # sin @saldo.setter -> solo lectura
+
+    def girar(self, monto):
+        if monto &gt; self.__saldo:
+            print("Saldo insuficiente")
+            return
+        self.__saldo -= monto
+
+cuenta._CuentaBancaria__saldo = 1   # si se puede</code></pre></div>
+    </div>
+  </article>
+
+  <article class="demo" id="d3">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 03</span>
+      <h3>Herencia</h3>
+      <p class="demo-sub">En vez de copiar y pegar entre <code>Auto</code> y <code>Moto</code>, lo común sube al padre. La prueba para saber si corresponde herencia es decirlo en voz alta: <em>un Auto <b>es un</b> Vehículo</em>.</p>
+      <div class="aha"><b>Momento ajá</b><span>Agregar un atributo al padre rompe a todos los hijos de golpe. La herencia acopla, y esa lección duele más viéndola que escuchándola.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Vehiculo.java · Auto.java</span></div><pre><code data-lang="java">// ===== Vehiculo.java =====
+public class Vehiculo {
+    protected String modelo;    // visible para los hijos
+
+    public Vehiculo(String modelo) { this.modelo = modelo; }
+
+    public void describir() {
+        System.out.println("Vehiculo " + modelo);
+    }
+}
+
+// ===== Auto.java =====   (sin import)
+public class Auto extends Vehiculo {
+    public Auto(String modelo) {
+        super(modelo);          // SIEMPRE primero
+    }
+    @Override                   // el compilador verifica
+    public void describir() {
+        System.out.println("Auto " + modelo);
+    }
+}</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">vehiculo.py · auto.py</span></div><pre><code data-lang="py"># ===== vehiculo.py =====
+class Vehiculo:
+    def __init__(self, modelo):
+        self._modelo = modelo   # "_" = convencion
+
+    def describir(self):
+        print(f"Vehiculo {self._modelo}")
+
+
+# ===== auto.py =====
+from vehiculo import Vehiculo   # aqui SI hace falta
+
+class Auto(Vehiculo):
+    def __init__(self, modelo):
+        super().__init__(modelo)
+
+    # no hay @Override: basta repetir el nombre.
+    # si lo escribes mal, Python crea un metodo
+    # NUEVO en silencio y nunca te enteras
+    def describir(self):
+        print(f"Auto {self._modelo}")</code></pre></div>
+    </div>
+  </article>
+
+  <article class="demo" id="d4">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 04</span>
+      <h3>Polimorfismo, abstractas e interfaces</h3>
+      <p class="demo-sub">Un mismo llamado, muchas respuestas. Un <code>for</code> recorre círculos, rectángulos y triángulos sin saber con cuál está hablando, y cada uno calcula su área a su manera.</p>
+      <div class="aha"><b>Momento ajá</b><span>Empieza la clase por el <code>for</code> polimórfico, no por la definición. Primero que vean el truco funcionando; recién después explica qué es una clase abstracta.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Figura.java · Dibujable.java · Circulo.java</span></div><pre><code data-lang="java">// ===== Figura.java =====
+public abstract class Figura {
+    public abstract double area();   // sin cuerpo:
+}                        // el hijo DEBE implementarlo
+
+// ===== Dibujable.java =====
+public interface Dibujable { void dibujar(); }
+
+// ===== Circulo.java =====
+public class Circulo extends Figura implements Dibujable {
+    private double radio;
+    @Override public double area() {
+        return Math.PI * radio * radio;
+    }
+    @Override public void dibujar() { }
+}
+
+// el for no sabe con que clase habla:
+for (Figura f : figuras) {
+    System.out.println(f.area());
+}</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">figura.py · dibujable.py · circulo.py</span></div><pre><code data-lang="py"># ===== figura.py =====
+from abc import ABC, abstractmethod
+
+class Figura(ABC):
+    @abstractmethod
+    def area(self): ...
+
+# ===== dibujable.py =====
+class Dibujable(ABC):       # no existe "interface":
+    @abstractmethod         # se usa otra ABC
+    def dibujar(self): ...
+
+# ===== circulo.py =====
+from dibujable import Dibujable
+from figura import Figura
+
+class Circulo(Figura, Dibujable):   # herencia multiple
+    def area(self):
+        return math.pi * self._radio ** 2
+    def dibujar(self): ...
+
+# ===== cuadrado.py =====  DUCK TYPING:
+# no hereda de nada y aun asi entra en el mismo for
+class Cuadrado:
+    def area(self): return 16</code></pre></div>
+    </div>
+  </article>
+
+  <article class="demo" id="d5">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 05</span>
+      <h3>Composición y miembros estáticos</h3>
+      <p class="demo-sub">Dos ideas juntas: un <code>Curso</code> <b>tiene</b> alumnos (composición, no herencia), y el contador de alumnos creados pertenece a la clase, no a cada objeto.</p>
+      <div class="aha"><b>Momento ajá</b><span>Si creas tres alumnos, ¿hay tres contadores o uno? Esa pregunta, respondida corriendo el código, deja <code>static</code> aprendido para siempre.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Alumno.java · Curso.java</span></div><pre><code data-lang="java">// ===== Alumno.java =====
+public class Alumno {
+    private static int totalCreados = 0;   // UNA copia
+    public static final double NOTA_MINIMA = 4.0;
+
+    private String nombre;                 // una por objeto
+
+    public Alumno(String nombre) {
+        this.nombre = nombre;
+        totalCreados++;        // sin "this": es de la clase
+    }
+    public static boolean aprueba(double n) {
+        return n &gt;= NOTA_MINIMA;
+    }
+}
+
+// ===== Curso.java =====
+public class Curso {
+    private ArrayList&lt;Alumno&gt; alumnos;   // COMPOSICION
+}</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">alumno.py · curso.py</span></div><pre><code data-lang="py"># ===== alumno.py =====
+class Alumno:
+    total_creados = 0        # suelto en la clase = static
+    NOTA_MINIMA = 4.0        # MAYUSCULAS = "no tocar"
+
+    def __init__(self, nombre):
+        self._nombre = nombre       # uno por objeto
+        Alumno.total_creados += 1
+
+    @staticmethod
+    def aprueba(nota):
+        return nota &gt;= Alumno.NOTA_MINIMA
+
+
+# ===== curso.py =====
+class Curso:
+    def __init__(self):
+        self._alumnos = []   # DENTRO de __init__ o se
+                             # comparte entre TODOS los cursos</code></pre></div>
+    </div>
+  </article>
+
+  <article class="demo" id="d6">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 06</span>
+      <h3>Sobrecarga, toString y equals</h3>
+      <p class="demo-sub">Las tres preguntas que todo alumno hace tarde o temprano: por qué al imprimir sale <code>Fraccion@1b6d3586</code>, por qué dos objetos iguales dan <code>false</code>, y si se pueden tener dos métodos con el mismo nombre.</p>
+      <div class="aha"><b>Momento ajá</b><span>El cruce que más confunde: en Java <code>==</code> compara referencias y <code>equals()</code> contenido. En Python es <code>is</code> el que compara referencias, y <code>==</code> el que compara contenido.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Fraccion.java</span></div><pre><code data-lang="java">// ===== Fraccion.java =====
+public class Fraccion {
+    // SOBRECARGA: mismo nombre, distintos parametros
+    public Fraccion sumar(Fraccion otra) { }
+    public Fraccion sumar(int entero)    { }
+
+    @Override public String toString() {
+        return numerador + "/" + denominador;
+    }
+    @Override public boolean equals(Object obj) {
+        Fraccion o = (Fraccion) obj;
+        return num * o.den == o.num * den;
+    }
+}
+x == y        // false: distinto objeto
+x.equals(y)   // true:  mismo contenido
+// a + b  ->  imposible: no hay sobrecarga de operadores</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">fraccion.py</span></div><pre><code data-lang="py"># ===== fraccion.py =====
+class Fraccion:
+    # NO hay sobrecarga: el segundo metodo pisa
+    # al primero. Se revisa el tipo a mano.
+    def sumar(self, otro):
+        if isinstance(otro, Fraccion): ...
+        if isinstance(otro, int): ...
+
+    def __str__(self):
+        return f"{self._num}/{self._den}"
+
+    def __eq__(self, otro):
+        return self._num * otro._den == otro._num * self._den
+
+    def __add__(self, otro):     # Java no puede hacer esto
+        return self.sumar(otro)
+
+x is y   # False   |   x == y   # True   |   a + b  funciona</code></pre></div>
+    </div>
+  </article>
+  <article class="demo" id="d7">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 07</span>
+      <h3>Interfaces</h3>
+      <p class="demo-sub">La pregunta que responde: si ya tenemos herencia, ¿para qué sirven las interfaces? Una jerarquía de animales con dos ramas, y dos contratos &mdash; <code>Nadador</code> y <code>Volador</code> &mdash; que las cruzan.</p>
+      <div class="aha"><b>Momento ajá</b><span>El pingüino. Es un <code>Ave</code>, nada mejor que nadie, y no vuela. Si <code>volar()</code> viviera en la clase <code>Ave</code>, habría que rellenarlo con algo falso. Al estar en una interfaz, el pingüino simplemente no la firma.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>Java<span class="fname">Nadador.java · Pato.java · Pinguino.java</span></div><pre><code data-lang="java">// ===== Nadador.java =====
+public interface Nadador {
+    void nadar();               // sin "public":
+    double velocidadEnAgua();   // en una interfaz es automatico
+}
+
+// ===== Pato.java =====
+public class Pato extends Ave implements Nadador, Volador {
+//                ^^^^^^^^^^^ lo que ES (una sola)
+//                            ^^^^^^^^^^ lo que SABE HACER (las que sean)
+
+// ===== Pinguino.java =====
+public class Pinguino extends Ave implements Nadador {
+                          // no firma Volador: no vuela
+
+// ===== Demo07.java =====  la interfaz como TIPO
+Nadador[] nadadores = { donald, pingu, flipper };
+//                      un Ave, un Ave, un MAMIFERO
+// jerarquias distintas, una sola lista</code></pre></div>
+      <div class="pane py"><div class="pane-lbl"><span class="dot"></span>Python<span class="fname">nadador.py · pato.py · nadador_protocol.py</span></div><pre><code data-lang="py"># ===== nadador.py =====
+class Nadador(ABC):         # no existe "interface"
+    @abstractmethod
+    def nadar(self): ...
+    @abstractmethod
+    def velocidad_en_agua(self): ...
+
+# ===== pato.py =====
+class Pato(Ave, Nadador, Volador):
+#          ^^^ lo que ES
+#               ^^^^^^^^^^^^^^^^ lo que SABE HACER
+# La distincion es de INTENCION, no de sintaxis
+
+# ===== nadador_protocol.py =====  SOLO PYTHON
+@runtime_checkable
+class NadadorProtocol(Protocol):
+    def nadar(self) -> None: ...
+# El submarino la cumple SIN heredar ni declarar nada</code></pre></div>
+    </div>
+  </article>
+  <article class="demo" id="d8">
+    <div class="demo-top">
+      <span class="demo-n">DEMO 08 · CIERRE</span>
+      <h3>Mundo 1-1</h3>
+      <p class="demo-sub">Todo el curso en un solo ejemplo: cuatro personajes, seis enemigos, cuatro objetos y cuatro interfaces que cruzan las tres ramas de la jerarquía. Y el personaje tiene <b>estado</b>: nace pequeño, el hongo lo hace grande, y el daño lo devuelve a pequeño antes de matarlo. Solo Java, 23 archivos.</p>
+      <div class="aha"><b>Momento ajá</b><span>El Spiny. Es un <code>Enemigo</code>, camina como el Goomba, y tiene púas. Si <code>recibirPisotón()</code> viviera en la clase <code>Enemigo</code>, el Spiny tendría que fingir que se deja pisar. Es el pingüino de la demo 7, en un dominio que se saben de memoria.</span></div>
+    </div>
+    <div class="pair">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>La jerarquía<span class="fname">Entidad.java · Personaje.java · Enemigo.java</span></div><pre><code data-lang="java">Entidad (abstracta)        nombre, x
+|- Personaje (abstracta)   vidas, monedas, puntos
+|   |- Mario        implements Nadador
+|   |- Luigi
+|   |- Toad
+|   \- Peach        implements Volador
+|- Enemigo (abstracta)     danio, atacar()
+|   |- Goomba       implements Aplastable
+|   |- Koopa        implements Aplastable
+|   |   \- Paratroopa  implements Volador
+|   |- Spiny            <- NO Aplastable
+|   |- CheepCheep   implements Nadador
+|   \- BillBala     implements Volador
+\- Objeto (abstracta)
+    |- Moneda       implements Recolectable
+    |- Hongo, Estrella
+    \- Bloque           <- NO Recolectable</code></pre></div>
+      <div class="pane java" style="border-left:1px solid var(--rule-soft)"><div class="pane-lbl"><span class="dot"></span>El estado<span class="fname">Personaje.java</span></div><pre><code data-lang="java">// PEQUENO --(hongo)--> GRANDE
+// GRANDE  --(danio)--> PEQUENO   no pierde vida
+// PEQUENO --(danio)--> muere     pierde una vida
+
+public void recibirDanio(int danio) {
+    for (int golpe = 1; golpe &lt;= danio; golpe++) {
+        if (this.esGrande) {
+            this.esGrande = false;      // solo encoge
+        } else {
+            this.vidas--;               // ahora si muere
+            return;
+        }
+    }
+}
+
+// Luigi PEQUENO y Toad GRANDE reciben el MISMO
+// golpe del MISMO Spiny y terminan distinto.
+// Sin un solo "if" en quien llama al metodo.</code></pre></div>
+    </div>
+    <div class="pair" style="border-top:1px solid var(--rule-soft)">
+      <div class="pane java"><div class="pane-lbl"><span class="dot"></span>El contrato decide<span class="fname">Personaje.java · pisar()</span></div><pre><code data-lang="java">// Mario no sabe si tiene enfrente un Goomba o un
+// Spiny. Solo pregunta si firmo el contrato:
+public void pisar(Enemigo enemigo) {
+    if (enemigo instanceof Aplastable) {
+        ((Aplastable) enemigo).recibirPisoton();
+        sumarPuntos(...);
+    } else {
+        recibirDanio(enemigo.getDanio());
+    }
+}</code></pre></div>
+      <div class="pane java" style="border-left:1px solid var(--rule-soft)"><div class="pane-lbl"><span class="dot"></span>Lo que el compilador impide<span class="fname">Demo08.java</span></div><pre><code data-lang="java">// La interfaz como TIPO, cruzando las tres ramas:
+Volador[] voladores = { peach, paratroopa, bill };
+//                      ^^^^^ un Personaje
+//                             ^^^^^^^^^^ dos Enemigos
+
+// Y estas dos lineas NO compilan, con razon:
+// Aplastable   a = spiny;
+// Recolectable r = bloque;</code></pre></div>
+    </div>
+  </article>
+</section>
+
+<section id="tabla">
+  <div class="sec-head">
+    <h2>Tabla de traducción</h2>
+    <span class="tag">para proyectar</span>
+  </div>
+  <p class="sec-note">La hoja de referencia que conviene tener abierta durante todo el semestre. La última columna es la que evita malentendidos: no siempre la traducción es exacta.</p>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Concepto</th><th class="cj">Java</th><th class="cp">Python</th><th>Lo que hay que advertir</th></tr></thead>
+      <tbody>
+        <tr><td class="concept">Archivo y clase</td><td class="cj">Perro.java → class Perro</td><td class="cp">perro.py → class Perro</td><td class="why">Java lo <b>exige</b>; en Python es solo convención (PEP 8).</td></tr>
+        <tr><td class="concept">Usar otra clase</td><td class="cj">nada, misma carpeta</td><td class="cp">from perro import Perro</td><td class="why">Python siempre necesita el import; Java no, dentro del paquete.</td></tr>
+        <tr><td class="concept">Definir clase</td><td class="cj">class Perro { }</td><td class="cp">class Perro:</td><td class="why">Llaves contra indentación.</td></tr>
+        <tr><td class="concept">Constructor</td><td class="cj">Perro(String n) { }</td><td class="cp">def __init__(self, n):</td><td class="why">En Java lleva el nombre de la clase.</td></tr>
+        <tr><td class="concept">El objeto actual</td><td class="cj">this</td><td class="cp">self</td><td class="why">En Python es un parámetro explícito, siempre el primero.</td></tr>
+        <tr><td class="concept">Crear objeto</td><td class="cj">new Perro("Fido")</td><td class="cp">Perro("Fido")</td><td class="why">Python no tiene <code>new</code>.</td></tr>
+        <tr><td class="concept">Declarar atributo</td><td class="cj">String nombre;</td><td class="cp">self.nombre = ...</td><td class="why">En Python nace al asignarlo; no se declara arriba.</td></tr>
+        <tr><td class="concept">Público</td><td class="cj">public</td><td class="cp">nombre</td><td class="why">Es el comportamiento por defecto en Python.</td></tr>
+        <tr><td class="concept">Protegido</td><td class="cj">protected</td><td class="cp">_nombre</td><td class="why">Pura convención: nada lo impide.</td></tr>
+        <tr><td class="concept">Privado</td><td class="cj">private</td><td class="cp">__nombre</td><td class="why">Java lo impide de verdad; Python solo lo renombra.</td></tr>
+        <tr><td class="concept">Getter / setter</td><td class="cj">getX() / setX()</td><td class="cp">@property / @x.setter</td><td class="why">En Python se escribe como atributo y ejecuta un método.</td></tr>
+        <tr><td class="concept">Heredar</td><td class="cj">class Auto extends Vehiculo</td><td class="cp">class Auto(Vehiculo):</td><td class="why">&mdash;</td></tr>
+        <tr><td class="concept">Llamar al padre</td><td class="cj">super(...)</td><td class="cp">super().__init__(...)</td><td class="why">En Java debe ser la primera línea del constructor.</td></tr>
+        <tr><td class="concept">Sobrescribir</td><td class="cj">@Override</td><td class="cp">solo repetir el nombre</td><td class="why">Java verifica el nombre; Python no dice nada si lo escribes mal.</td></tr>
+        <tr><td class="concept">Clase abstracta</td><td class="cj">abstract class</td><td class="cp">class X(ABC):</td><td class="why">Ninguna de las dos se puede instanciar.</td></tr>
+        <tr><td class="concept">Método abstracto</td><td class="cj">abstract void area();</td><td class="cp">@abstractmethod</td><td class="why">Java falla al compilar; Python al instanciar.</td></tr>
+        <tr><td class="concept">Interfaz</td><td class="cj">interface + implements</td><td class="cp">otra ABC como base</td><td class="why">Python no tiene la palabra <code>interface</code>.</td></tr>
+        <tr><td class="concept">Herencia múltiple</td><td class="cj">solo de interfaces</td><td class="cp">sí, de clases</td><td class="why">Por eso <code>implements</code> se traduce como base extra.</td></tr>
+        <tr><td class="concept">Interfaz como tipo</td><td class="cj">Nadador n = pato;</td><td class="cp">n = pato</td><td class="why">En Java el tipo <b>limita</b> qué puedes pedirle; en Python no limita nada.</td></tr>
+        <tr><td class="concept">Contrato sin firmarlo</td><td class="cj">imposible</td><td class="cp">typing.Protocol</td><td class="why">Estructural: basta con tener los métodos. Comprueba que existan, no la firma.</td></tr>
+        <tr><td class="concept">Estático</td><td class="cj">static</td><td class="cp">atributo de clase</td><td class="why">En Python va suelto en la clase, fuera de <code>__init__</code>.</td></tr>
+        <tr><td class="concept">Constante</td><td class="cj">static final</td><td class="cp">MAYUSCULAS</td><td class="why">Python no tiene constantes reales.</td></tr>
+        <tr><td class="concept">Texto del objeto</td><td class="cj">toString()</td><td class="cp">__str__ / __repr__</td><td class="why">Python distingue usuario (<code>str</code>) de programador (<code>repr</code>).</td></tr>
+        <tr><td class="concept">Igualdad de contenido</td><td class="cj">equals()</td><td class="cp">__eq__, vía ==</td><td class="why">El cruce que más confunde al cambiar de lenguaje.</td></tr>
+        <tr><td class="concept">Misma referencia</td><td class="cj">==</td><td class="cp">is</td><td class="why">Ídem: el mismo símbolo significa cosas distintas.</td></tr>
+        <tr><td class="concept">Sobrecarga de métodos</td><td class="cj">sí, por tipo</td><td class="cp">no existe</td><td class="why">En Python el segundo método pisa al primero.</td></tr>
+        <tr><td class="concept">Sobrecarga de operadores</td><td class="cj">no existe</td><td class="cp">__add__, __mul__</td><td class="why">Por eso en Java se escribe <code>a.sumar(b)</code> y nunca <code>a + b</code>.</td></tr>
+        <tr><td class="concept">Punto de entrada</td><td class="cj">public static void main</td><td class="cp">if __name__ == "__main__":</td><td class="why">&mdash;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="ejercicios">
+  <div class="sec-head">
+    <h2>Los cuatro movimientos</h2>
+    <span class="tag">63 ejercicios · 9 hojas</span>
+  </div>
+  <p class="sec-note">Cada hoja de ejercicios repite las mismas cuatro operaciones sobre un código distinto. La repetición es deliberada: el alumno deja de traducir sintaxis y empieza a reconocer la estructura.</p>
+  <div class="ex-grid">
+    <div class="ex"><span class="k">Movimiento 1</span><h4>Agregar un atributo</h4><p>Declararlo, sumarlo al constructor y arreglar todas las llamadas que quedaron cortas. En Java el compilador las señala una por una; en Python el error llega recién al ejecutar.</p></div>
+    <div class="ex"><span class="k">Movimiento 2</span><h4>Agregar un método</h4><p>Primero uno que hace algo (<code>void</code>), después uno que responde algo (con <code>return</code>). Esa distinción cuesta más de lo que uno espera.</p></div>
+    <div class="ex"><span class="k">Movimiento 3</span><h4>Crear una nueva instancia</h4><p>El ejercicio que demuestra el premio: agregar un objeto más sin tocar ni una línea de la clase, y en la demo 4, sin tocar el bucle que lo recorre.</p></div>
+    <div class="ex"><span class="k">Movimiento 4</span><h4>Cambiar la privacidad</h4><p>Pasar un atributo de <code>private</code> a <code>public</code>, hacerse millonario saltándose las validaciones, y volver atrás. En Python, recorrer los tres niveles: <code>saldo</code>, <code>_saldo</code>, <code>__saldo</code>.</p></div>
+  </div>
+</section>
+
+<section id="clase">
+  <div class="sec-head">
+    <h2>Cómo usarlo en clase</h2>
+    <span class="tag">6 sesiones</span>
+  </div>
+  <p class="sec-note">Tres tácticas que funcionan particularmente bien con este material, y la secuencia sugerida.</p>
+
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div><h4>Primero el dolor, después el remedio</h4><p>El ejercicio E6.1 hace imprimir <code>Fraccion@1b6d3586</code> <em>antes</em> de enseñar <code>toString()</code>. Cuando el alumno ya sintió el problema, el concepto se explica solo.</p></div></div>
+    <div class="step"><div class="step-n">02</div><div><h4>Que rompan el código a propósito</h4><p>Cuatro ejercicios piden provocar el error y leer el mensaje del compilador. Se aprende más de un error bien leído que de diez líneas que funcionan.</p></div></div>
+    <div class="step"><div class="step-n">03</div><div><h4>Dos terminales, lado a lado</h4><p>Correr ambas versiones a la vez y comparar la salida idéntica es la demostración más directa de que el concepto no depende del lenguaje.</p></div></div>
+    <div class="step"><div class="step-n">04</div><div><h4>Secuencia sugerida</h4><p>Demos 1 y 2 juntas &mdash; no avanzar hasta que distingan clase de objeto. Luego herencia, luego la sesión conceptual de polimorfismo, luego composición y <code>static</code>, y la demo 6 para cerrar dudas acumuladas.</p></div></div>
+    <div class="step"><div class="step-n">05</div><div><h4>Proyecto integrador</h4><p>Un sistema de biblioteca que use las seis demos juntas: <code>Material</code> abstracta con <code>Libro</code>, <code>Revista</code> y <code>DVD</code>; atributos privados validados; una <code>Biblioteca</code> que los contiene; contador estático de préstamos; <code>equals()</code> por ISBN; interfaz <code>Prestable</code>. Se entrega en ambos lenguajes, y en la defensa el alumno explica las tres diferencias más importantes que encontró.</p></div></div>
+  </div>
+</section>
+
+<section id="correr">
+  <div class="sec-head">
+    <h2>Cómo se ejecuta</h2>
+    <span class="tag">sin instalar nada</span>
+  </div>
+  <p class="sec-note">Verificado con OpenJDK 17 y Python 3.11: las doce demos corren sin errores y sin dependencias externas. Con las clases en archivos separados, Java ahora necesita compilar &mdash; y esa es justamente la ocasión para mostrar en qué se diferencia de Python.</p>
+  <div class="run">
+    <div class="runbox j"><div class="rl"><span class="dot"></span>Java</div><code>cd 01-clases-objetos/java
+javac *.java     # compila todos -&gt; genera los .class
+java Demo01      # se ejecuta la CLASE, sin extensión</code><small><code style="display:inline;padding:2px 5px;border:none;background:none">java Demo01.java</code> ya no sirve: ese atajo admite un solo archivo. El modo multi-archivo llegó en Java 22; con Java 17 se usa <code style="display:inline;padding:2px 5px;border:none;background:none">javac</code>. Para limpiar, <code style="display:inline;padding:2px 5px;border:none;background:none">rm *.class</code>.</small></div>
+    <div class="runbox p"><div class="rl"><span class="dot"></span>Python</div><code>cd 01-clases-objetos/python
+python3 demo01.py    # sin compilar</code><small>Sin librerías externas: la única importación de todo el material es <code style="display:inline;padding:2px 5px;border:none;background:none">abc</code>, en la demo 4. Para limpiar, <code style="display:inline;padding:2px 5px;border:none;background:none">rm -rf __pycache__</code>.</small></div>
+  </div>
+</section>
+
+<footer>
+  <b>poo-java-python</b> &mdash; 6 demos pareadas, 39 archivos de código y 7 hojas de ejercicios. Cada carpeta contiene <b>java/</b>, <b>python/</b> y su <b>EJERCICIOS.md</b>; la hoja 00, sobre estructura de archivos, va antes de todo lo demás.
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KW = "abstract|boolean|break|case|catch|class|continue|default|double|else|extends|final|float|for|if|implements|import|instanceof|int|interface|new|null|private|protected|public|return|static|switch|throw|throws|try|void|while|true|false|def|elif|in|not|and|or|is|None|True|False|from|raise|except|pass|lambda|with|as|global";
+  var re = new RegExp(
+      "(\\/\\/[^\\n]*|#[^\\n]*)"                    // 1 comentario
+    + "|(\"(?:[^\"\\\\\\n]|\\\\.)*\"|'(?:[^'\\\\\\n]|\\\\.)*')" // 2 string
+    + "|(@\\w+)"                                    // 3 decorador / anotacion
+    + "|\\b(this|self|cls|super)\\b"                // 4 el objeto actual
+    + "|\\b(" + KW + ")\\b"                         // 5 keyword
+    + "|\\b([A-Z]\\w*)\\b"                          // 6 tipo / clase
+    + "|\\b(\\d+\\.?\\d*)\\b",                      // 7 numero
+    "g");
+  var cls = {1:"tk-com",2:"tk-str",3:"tk-dec",4:"tk-self",5:"tk-kw",6:"tk-typ",7:"tk-num"};
+
+  document.querySelectorAll("code[data-lang]").forEach(function(el){
+    el.innerHTML = el.innerHTML.replace(re, function(m){
+      for (var i = 1; i <= 7; i++) {
+        if (arguments[i] !== undefined) {
+          return '<span class="' + cls[i] + '">' + m + '</span>';
+        }
+      }
+      return m;
+    });
+  });
+})();
+</script>
