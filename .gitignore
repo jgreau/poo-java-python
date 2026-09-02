@@ -10,3 +10,7 @@ __pycache__/
 .vscode/
 *.swp
 .DS_Store
+
+# Taller grupal: la solucion del profesor no se publica.
+# Los alumnos tienen acceso a este repo.
+09-taller-grupal/solucion-profesor/

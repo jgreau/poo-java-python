@@ -1,0 +1,905 @@
+<title>Comandas DUOC Delivery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=JetBrains+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root {
+    --paper:      #ffffff;
+    --ground:     #edeae4;
+    --ink:        #1a1a17;
+    --ink-soft:   #57534b;
+    --rule:       #cbc6bc;
+    --rule-soft:  #e3ded5;
+    --band:       #1a1a17;
+    --band-ink:   #ffffff;
+    --accent:     #1a1a17;
+    --chip:       #f2efe9;
+
+    --g1: #ab3a17;
+    --g2: #0b6a5f;
+    --g3: #1f4b96;
+    --g4: #6a3b9c;
+    --g5: #85670c;
+
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans:  "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --mono:  "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #17171a;
+      --ground:    #0d0d0f;
+      --ink:       #ececea;
+      --ink-soft:  #a2a09a;
+      --rule:      #3d3d42;
+      --rule-soft: #2a2a2e;
+      --band:      #ececea;
+      --band-ink:  #17171a;
+      --chip:      #212126;
+      --g1: #e8825d; --g2: #4cbdac; --g3: #7ba7ee; --g4: #b78be0; --g5: #d3b243;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #17171a;
+    --ground:    #0d0d0f;
+    --ink:       #ececea;
+    --ink-soft:  #a2a09a;
+    --rule:      #3d3d42;
+    --rule-soft: #2a2a2e;
+    --band:      #ececea;
+    --band-ink:  #17171a;
+    --chip:      #212126;
+    --g1: #e8825d; --g2: #4cbdac; --g3: #7ba7ee; --g4: #b78be0; --g5: #d3b243;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 24px 16px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .ficha {
+    background: var(--paper);
+    width: 100%;
+    max-width: 780px;
+    padding: 34px 40px 40px;
+    border: 1px solid var(--rule-soft);
+    --accent: var(--ink);
+  }
+  .ficha.g1 { --accent: var(--g1); }
+  .ficha.g2 { --accent: var(--g2); }
+  .ficha.g3 { --accent: var(--g3); }
+  .ficha.g4 { --accent: var(--g4); }
+  .ficha.g5 { --accent: var(--g5); }
+
+  /* ---- cabecera tipo comanda ---- */
+  .comanda {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 10px;
+  }
+  .comanda .quien { display: flex; align-items: baseline; gap: 14px; }
+  .num {
+    font-family: var(--sans);
+    font-weight: 900;
+    font-size: 54px;
+    line-height: 0.8;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+  }
+  .rol {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 27px;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .rol small {
+    display: block;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 3px;
+  }
+  .sello {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-align: right;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .tira {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    border-bottom: 1px dashed var(--rule);
+    padding: 7px 0 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+  }
+  .tira b { color: var(--ink); font-weight: 700; }
+
+  h3 {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 26px 0 8px;
+  }
+  h3:first-of-type { margin-top: 22px; }
+  p { margin: 0 0 10px; max-width: 64ch; }
+  p:last-child { margin-bottom: 0; }
+  .lede { font-size: 16.5px; margin-top: 16px; }
+
+  code, .mono { font-family: var(--mono); font-size: 0.86em; }
+  code { background: var(--chip); padding: 1px 4px; }
+
+  /* ---- contratos: el par dar / recibir ---- */
+  .contratos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .contrato {
+    border: 1px solid var(--rule);
+    padding: 12px 14px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contrato.propio { border-color: var(--accent); border-width: 2px; }
+  .contrato .tipo {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .contrato .nombre {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .contrato ul { margin: 0; padding-left: 0; list-style: none; }
+  .contrato li {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 2px 0;
+    border-top: 1px dotted var(--rule);
+  }
+  .contrato .quien-mas { font-size: 12.5px; color: var(--ink-soft); }
+  .contrato .quien-mas b { color: var(--ink); }
+
+  /* ---- tabla de metodos ---- */
+  table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  th {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--ink-soft);
+    border-bottom: 1.5px solid var(--rule);
+    padding: 0 10px 5px 0;
+  }
+  td {
+    vertical-align: top;
+    padding: 7px 10px 7px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 13.5px;
+  }
+  td:first-child { font-family: var(--mono); font-size: 11.5px; white-space: nowrap; padding-right: 16px; }
+  td:last-child { padding-right: 0; }
+  .tabla-envoltorio { overflow-x: auto; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.5;
+    background: var(--chip);
+    border-left: 3px solid var(--accent);
+    padding: 11px 13px;
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  ol.reglas { margin: 0; padding-left: 20px; }
+  ol.reglas li { margin-bottom: 7px; max-width: 62ch; }
+  ul.simple { margin: 0; padding-left: 19px; }
+  ul.simple li { margin-bottom: 5px; max-width: 62ch; }
+
+  .nota {
+    border-top: 1px dashed var(--rule);
+    margin-top: 26px;
+    padding-top: 12px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .nota b { color: var(--ink); }
+
+  .pie {
+    margin-top: 22px;
+    border-top: 3px solid var(--accent);
+    padding-top: 8px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* ---- ficha general ---- */
+  .general .comanda { border-color: var(--ink); }
+  .general .num { font-size: 40px; }
+  .titulo {
+    font-family: var(--sans);
+    font-weight: 900;
+    font-size: 40px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .titulo small {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .anillo td:first-child, .anillo td:nth-child(2) { font-family: var(--mono); font-size: 11.5px; }
+  .anillo .flecha { color: var(--ink-soft); }
+  .g1t { color: var(--g1); font-weight: 600; }
+  .g2t { color: var(--g2); font-weight: 600; }
+  .g3t { color: var(--g3); font-weight: 600; }
+  .g4t { color: var(--g4); font-weight: 600; }
+  .g5t { color: var(--g5); font-weight: 600; }
+
+  .reloj { width: 100%; border-collapse: collapse; }
+  .reloj td { font-size: 13.5px; }
+  .reloj td:first-child { width: 66px; font-weight: 700; color: var(--ink); }
+
+  @media (max-width: 700px) {
+    .ficha { padding: 24px 20px 28px; }
+    .contratos { grid-template-columns: 1fr; }
+    .comanda { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .sello { text-align: left; }
+    .titulo { font-size: 30px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 11mm 12mm; }
+    body {
+      background: #fff;
+      padding: 0;
+      gap: 0;
+      display: block;
+      font-size: 9.6pt;
+      line-height: 1.42;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .ficha {
+      max-width: none;
+      width: 100%;
+      border: 0;
+      padding: 0;
+      page-break-after: always;
+      break-after: page;
+    }
+    .ficha:last-child { page-break-after: auto; break-after: auto; }
+
+    /* una ficha de grupo = una hoja A4 */
+    .num { font-size: 42px; }
+    .rol { font-size: 22px; }
+    .rol small { font-size: 10px; }
+    .titulo { font-size: 32px; }
+    .titulo small { font-size: 10px; }
+    .sello { font-size: 9px; }
+    .tira { font-size: 9.5px; padding: 5px 0 6px; gap: 3px 18px; }
+    .lede { font-size: 10.6pt; margin-top: 9px; }
+    h3 { font-size: 10px; margin: 14px 0 5px; }
+    h3:first-of-type { margin-top: 13px; }
+    p { margin-bottom: 7px; }
+    pre { font-size: 8pt; line-height: 1.4; padding: 8px 10px; }
+    th { font-size: 9px; padding-bottom: 4px; }
+    td { padding: 3px 10px 3px 0; font-size: 10.5px; }
+    td:first-child { font-size: 9.5px; padding-right: 12px; }
+    .reloj td { font-size: 10.5px; }
+    .contratos { gap: 10px; }
+    .contrato { padding: 9px 11px 10px; gap: 4px; }
+    .contrato .nombre { font-size: 14px; }
+    .contrato .tipo { font-size: 9px; }
+    .contrato li { font-size: 10.5px; padding: 1px 0; }
+    .contrato .quien-mas { font-size: 10.5px; }
+    ol.reglas li, ul.simple li { margin-bottom: 4px; }
+    ul.simple li { font-size: 10.5px; }
+    .nota { margin-top: 11px; padding-top: 7px; font-size: 10.5px; }
+    .pie { margin-top: 10px; padding-top: 6px; font-size: 9px; }
+
+    /* nada se parte por la mitad */
+    .contrato, pre, tr, .comanda, .nota, .pie { break-inside: avoid; }
+  }
+
+</style>
+
+<!-- ============ FICHA GENERAL ============ -->
+<section class="ficha general">
+  <div class="comanda">
+    <div class="quien">
+      <div>
+        <h1 class="titulo"><small>Taller grupal · POO en Java</small>DUOC Delivery</h1>
+      </div>
+    </div>
+    <div class="sello">
+      FICHA GENERAL<br>
+      5 grupos · 120 min<br>
+      Java 17 · <span class="mono">javac *.java</span>
+    </div>
+  </div>
+
+  <div class="tira">
+    <span><b>20</b> archivos</span>
+    <span><b>16</b> los escriben ustedes</span>
+    <span><b>3</b> clases abstractas</span>
+    <span><b>5</b> interfaces</span>
+    <span><b>40</b> pruebas automáticas</span>
+  </div>
+
+  <p class="lede">Vamos a construir el sistema de un delivery, pero cada grupo
+  escribe una parte distinta del mismo programa. El profesor entrega la clase
+  raíz y los dos <code>main</code>. Lo demás es de ustedes: cinco interfaces y
+  once clases. Al final de la sesión compilamos todo junto, en pantalla, y
+  vemos si corre.</p>
+
+  <h3>Cómo vienen los archivos</h3>
+  <p><b>El Javadoc es la especificación.</b> Sus archivos no traen instrucciones
+  sueltas: traen el Javadoc completo de cada método &mdash; qué hace, qué recibe,
+  qué devuelve, qué excepción lanza &mdash; y el cuerpo vacío. Ustedes leen el
+  contrato y escriben el código que lo cumple.</p>
+  <pre>/**
+ * El precio segun el tamano y los ingredientes extra.
+ *
+ * &lt;p&gt;FAMILIAR multiplica por 1.6, MEDIANA por 1.0 y PERSONAL por 0.7.
+ * Sobre eso se suman $700 por cada ingrediente extra.&lt;/p&gt;
+ *
+ * @return el precio final en pesos
+ */
+@Override
+public double calcularPrecio() {
+    // TODO G1
+}</pre>
+  <p>Las cinco interfaces van un paso más allá: <b>llegan vacías</b>. Traen
+  escrito en su Javadoc qué métodos debe exigir el contrato, con qué tipos y qué
+  debe lanzar, y el grupo dueño lo traduce a Java. Es lo primero que se hace hoy.</p>
+
+  <h3>La jerarquía completa</h3>
+  <pre>Producto (abstracta, la entrega el profesor)
+ |- Pizza, Sushi          G1   implements Calificable (G5) + Preparable (propia)
+ |- Bebida                G2   implements Preparable (G1)
+ \- Combo                 G2   implements Preparable (G1) + Descontable (propia)
+                               y ademas CONTIENE Productos  (composicion)
+
+Pedido                    G3   implements Descontable (G2)   contiene Producto[]
+
+MedioPago (abstracta)     G4   implements Facturable (G3)
+ |- Tarjeta               G4
+ \- Efectivo              G4
+
+Repartidor (abstracta)    G5   implements Cobrable (G4) + Calificable (propia)
+ |- RepartidorMoto        G5
+ \- RepartidorBici        G5</pre>
+
+  <h3>El anillo de contratos</h3>
+  <p>Cada grupo es <b>dueño de una interfaz</b> y está <b>obligado a cumplir la
+  del vecino</b>. El círculo se cierra: si un grupo no entrega, no compila nadie.</p>
+  <div class="tabla-envoltorio">
+    <table class="anillo">
+      <tr><th>Contrato</th><th>Lo escribe</th><th></th><th>Lo cumple</th></tr>
+      <tr><td>Preparable</td><td><span class="g1t">G1 Cocina</span></td><td class="flecha">→</td><td><span class="g2t">G2</span> en Bebida y Combo</td></tr>
+      <tr><td>Descontable</td><td><span class="g2t">G2 Bebidas</span></td><td class="flecha">→</td><td><span class="g3t">G3</span> en Pedido</td></tr>
+      <tr><td>Facturable</td><td><span class="g3t">G3 Pedido</span></td><td class="flecha">→</td><td><span class="g4t">G4</span> en MedioPago</td></tr>
+      <tr><td>Cobrable</td><td><span class="g4t">G4 Pagos</span></td><td class="flecha">→</td><td><span class="g5t">G5</span> en Repartidor</td></tr>
+      <tr><td>Calificable</td><td><span class="g5t">G5 Reparto</span></td><td class="flecha">→</td><td><span class="g1t">G1</span> en Pizza y Sushi</td></tr>
+    </table>
+  </div>
+
+  <h3>Las seis reglas</h3>
+  <ol class="reglas">
+    <li><b>Primero el contrato, después el código.</b> Nadie escribe el cuerpo
+    de un método antes del minuto 40. Mientras una interfaz esté vacía, el grupo
+    que la implementa no compila.</li>
+    <li><b>Cada grupo toca solo sus archivos.</b> Si necesitan que otro cambie
+    algo, se lo piden a ellos. No se edita el archivo de otro grupo.</li>
+    <li><b>Nadie modifica</b> <code>Producto.java</code>, <code>Verificador.java</code>,
+    <code>MainDemo.java</code> ni <code>MainPruebas.java</code>.</li>
+    <li><b>Las firmas no se cambian sin avisar.</b> Si tocan un método de su
+    interfaz, el grupo que la implementa deja de compilar en ese mismo segundo.</li>
+    <li><b>Los atributos van <code>private</code></b> y se validan en el
+    constructor o el setter, lanzando <code>IllegalArgumentException</code>.</li>
+    <li><b>Compilen temprano y seguido</b> con la línea de <code>javac</code> de
+    su ficha. No esperen al final.</li>
+    <li><b>Truco:</b> un método que declara <code>return</code> y no lo tiene
+    <b>no compila</b>. Mientras trabajan, dejen un <code>return 0;</code>
+    provisorio para poder ir compilando.</li>
+  </ol>
+
+  <h3>Los tres errores que van a ver</h3>
+  <div class="tabla-envoltorio">
+    <table>
+      <tr><th>Dice el compilador</th><th>Qué pasó</th></tr>
+      <tr><td>method does not override…</td><td>La interfaz que deben cumplir <b>todavía está vacía</b>. No es problema de ustedes: es el grupo dueño el que no la ha escrito.</td></tr>
+      <tr><td>missing return statement</td><td>El método está vacío. Ese es su trabajo. Para ir compilando a medias, un <code>return 0;</code> provisorio.</td></tr>
+      <tr><td>constructor X cannot be applied…</td><td>El constructor está vacío y Java intenta llamar solo a <code>super()</code>. Falta el <code>this(...)</code> o el <code>super(...)</code> con sus parámetros.</td></tr>
+    </table>
+  </div>
+
+  <h3>Cómo corre esto</h3>
+  <pre>javac *.java        # los 20 archivos juntos. Solo compila si los 5 terminaron.
+java MainDemo       # la demo narrativa que se proyecta
+java MainPruebas    # el banco de pruebas: 40 lineas [OK] / [FALLA]</pre>
+
+  <h3>Los 120 minutos</h3>
+  <table class="reloj">
+    <tr><td>0–15</td><td>Presentación del caso. Compilamos con todo vacío y falla: esa es la foto inicial.</td></tr>
+    <tr><td>15–25</td><td>Reparto de fichas. Cada grupo lee la suya.</td></tr>
+    <tr><td>25–40</td><td><b>Ronda de contratos.</b> Cada grupo <b>escribe su interfaz</b> &mdash;son dos métodos&mdash; y sale a explicársela al grupo que debe cumplirla. Nadie escribe cuerpos todavía.</td></tr>
+    <tr><td>40–70</td><td>Implementación. Cada grupo compila lo suyo por separado.</td></tr>
+    <tr><td>70–80</td><td><b>Checkpoint proyectado.</b> Los 5 grupos muestran su compilación.</td></tr>
+    <tr><td>80–100</td><td>Integración: todo en una carpeta, <code>javac *.java</code> en vivo.</td></tr>
+    <tr><td>100–115</td><td><code>MainDemo</code> y <code>MainPruebas</code>. Leemos el marcador.</td></tr>
+    <tr><td>115–120</td><td>Cierre.</td></tr>
+  </table>
+
+  <div class="nota"><b>Lo que se evalúa:</b> nada. Esta sesión es formativa. La
+  única nota que cuenta es la del marcador de <code>MainPruebas</code>, y es
+  colectiva: los 40 [OK] o no salen.</div>
+
+  <div class="pie"><span>DUOC DELIVERY · ficha general</span><span>POO en Java</span></div>
+</section>
+
+<!-- ============ GRUPO 1 ============ -->
+<section class="ficha g1">
+  <div class="comanda">
+    <div class="quien">
+      <span class="num">1</span>
+      <span class="rol"><small>Grupo</small>Cocina</span>
+    </div>
+    <div class="sello">
+      Pizza.java<br>Sushi.java<br>Preparable.java
+    </div>
+  </div>
+  <div class="tira">
+    <span>estación <b>HORNO</b> · <b>FRÍO</b></span>
+    <span>2 clases</span>
+    <span>4 sobrecargas</span>
+    <span>hereda de <b>Producto</b></span>
+  </div>
+
+  <p class="lede">Ustedes hacen la comida. Dos clases que heredan de
+  <code>Producto</code> y que calculan su precio de maneras completamente
+  distintas: eso es lo que después le permite al Pedido sumarlas sin
+  preguntar cuál es cuál.</p>
+
+  <h3>Los dos contratos</h3>
+  <div class="contratos">
+    <div class="contrato propio">
+      <span class="tipo">Ustedes lo escriben</span>
+      <span class="nombre">Preparable</span>
+      <ul>
+        <li>int minutosPreparacion()</li>
+        <li>String estacionCocina()</li>
+      </ul>
+      <span class="quien-mas">Está obligado a cumplirlo el <b>Grupo 2</b>, en Bebida y Combo.
+      <b>Escríbanla ustedes</b> en <code>Preparable.java</code>: llega vacía, con la
+      especificación en su Javadoc.</span>
+    </div>
+    <div class="contrato">
+      <span class="tipo">Deben cumplirlo</span>
+      <span class="nombre">Calificable</span>
+      <ul>
+        <li>void calificar(int estrellas)</li>
+        <li>double promedioEstrellas()</li>
+      </ul>
+      <span class="quien-mas">Lo escribe el <b>Grupo 5</b>. Va en las dos
+      clases: <code>implements Calificable</code>.</span>
+    </div>
+  </div>
+
+  <h3>Lo que tiene que hacer cada método</h3>
+  <div class="tabla-envoltorio">
+  <table>
+    <tr><th>Método</th><th>Regla</th></tr>
+    <tr><td>Pizza(nombre, precio)</td><td>Sobrecarga corta: asume tamaño <code>"MEDIANA"</code>. Llámense al otro constructor con <code>this(...)</code>, no copien el código.</td></tr>
+    <tr><td>Pizza(…, tamano)</td><td>Guarda el tamaño y deja los ingredientes extra en 0.</td></tr>
+    <tr><td>agregarIngrediente()</td><td>Agrega uno. Reutiliza la otra versión.</td></tr>
+    <tr><td>agregarIngrediente(int)</td><td>Agrega varios. Cantidad negativa → <code>IllegalArgumentException</code>.</td></tr>
+    <tr><td>Pizza.calcularPrecio()</td><td>FAMILIAR ×1.6 · MEDIANA ×1.0 · PERSONAL ×0.7, sobre el precio base, más $700 por cada ingrediente extra.</td></tr>
+    <tr><td>Sushi.calcularPrecio()</td><td><code>precioBase + (piezas − 10) × 350</code>, y $900 más si lleva palta. Un roll de 10 piezas cuesta exactamente el precio base.</td></tr>
+    <tr><td>calificar(int)</td><td>Solo de 1 a 5. Fuera de rango → <code>IllegalArgumentException</code>. Guarden suma y cantidad de votos.</td></tr>
+    <tr><td>promedioEstrellas()</td><td>Suma ÷ votos. Sin votos todavía, devuelve 0 (ojo con dividir por cero).</td></tr>
+    <tr><td>minutosPreparacion()</td><td>Pizza: 12 + 1 por ingrediente extra. Sushi: 8 siempre.</td></tr>
+    <tr><td>estacionCocina()</td><td>Pizza: <code>"HORNO"</code>. Sushi: <code>"FRIO"</code>.</td></tr>
+  </table>
+  </div>
+
+  <h3>Para compilar solo lo suyo</h3>
+  <pre>javac Producto.java Preparable.java Calificable.java Pizza.java Sushi.java</pre>
+
+  <h3>Cómo saben que quedó bien</h3>
+  <ul class="simple">
+    <li><span class="mono">[OK] Pizza extends Producto</span> — sección B</li>
+    <li><span class="mono">[OK] G1 cumple Calificable, contrato del G5</span> — sección C</li>
+    <li><span class="mono">[OK] El constructor corto asume MEDIANA</span> — sección E</li>
+    <li><span class="mono">[OK] calificar(9) rechazado: solo 1 a 5</span> — sección F</li>
+  </ul>
+
+  <div class="nota"><b>Si terminan antes:</b> habrán notado que el código de
+  <code>calificar()</code> y <code>promedioEstrellas()</code> quedó escrito
+  <b>dos veces</b>, igual en Pizza y en Sushi. Prepárense para responder esto
+  en el cierre: ¿dónde debería vivir ese código para escribirlo una sola vez, y
+  por qué en este diseño no se puede? Es la pregunta más interesante del taller.</div>
+
+  <div class="pie"><span>GRUPO 1 · COCINA</span><span>DUOC DELIVERY</span></div>
+</section>
+
+<!-- ============ GRUPO 2 ============ -->
+<section class="ficha g2">
+  <div class="comanda">
+    <div class="quien">
+      <span class="num">2</span>
+      <span class="rol"><small>Grupo</small>Barra y combos</span>
+    </div>
+    <div class="sello">
+      Bebida.java<br>Combo.java<br>Descontable.java
+    </div>
+  </div>
+  <div class="tira">
+    <span>estación <b>BARRA</b> · <b>ARMADO</b></span>
+    <span>2 clases</span>
+    <span>composición</span>
+    <span><b>instanceof</b></span>
+  </div>
+
+  <p class="lede">Ustedes tienen la clase más interesante del taller. El
+  <code>Combo</code> <b>es</b> un Producto y además <b>tiene</b> Productos
+  adentro: cuando calcula su precio recorre lo que le metieron y le pregunta a
+  cada uno cuánto vale, sin saber si es una pizza, un sushi o una bebida.
+  Polimorfismo dentro de su propia clase.</p>
+
+  <h3>Los dos contratos</h3>
+  <div class="contratos">
+    <div class="contrato propio">
+      <span class="tipo">Ustedes lo escriben</span>
+      <span class="nombre">Descontable</span>
+      <ul>
+        <li>double aplicarDescuento(double pct)</li>
+        <li>boolean tieneDescuento()</li>
+      </ul>
+      <span class="quien-mas">Está obligado a cumplirlo el <b>Grupo 3</b>, en Pedido.
+      <b>Escríbanla ustedes</b> en <code>Descontable.java</code>: llega vacía, con la
+      especificación en su Javadoc.</span>
+    </div>
+    <div class="contrato">
+      <span class="tipo">Deben cumplirlo</span>
+      <span class="nombre">Preparable</span>
+      <ul>
+        <li>int minutosPreparacion()</li>
+        <li>String estacionCocina()</li>
+      </ul>
+      <span class="quien-mas">Lo escribe el <b>Grupo 1</b>. Va en Bebida
+      <b>y</b> en Combo.</span>
+    </div>
+  </div>
+
+  <h3>Lo que tiene que hacer cada método</h3>
+  <div class="tabla-envoltorio">
+  <table>
+    <tr><th>Método</th><th>Regla</th></tr>
+    <tr><td>Bebida(n, precio, ml)</td><td>Sobrecarga corta: sin hielo. Usen <code>this(...)</code>.</td></tr>
+    <tr><td>Bebida(…, conHielo)</td><td>Mililitros ≤ 0 → <code>IllegalArgumentException</code>.</td></tr>
+    <tr><td>Bebida.calcularPrecio()</td><td>El precio base, más $500 si pasa de 500 cc.</td></tr>
+    <tr><td>Bebida.minutosPreparacion()</td><td>2 si lleva hielo, 1 si no. Estación: <code>"BARRA"</code>.</td></tr>
+    <tr><td>Combo(nombre)</td><td>Arreglo de capacidad 6, cantidad en 0, descuento inicial <code>DESCUENTO_COMBO</code>.</td></tr>
+    <tr><td>agregar(Producto)</td><td>Si ya no cabe → <code>IllegalStateException</code>.</td></tr>
+    <tr><td>Combo.calcularPrecio()</td><td><b>El corazón del ejercicio.</b> Recorren los items sumando <code>calcularPrecio()</code> y aplican el descuento. Sin un solo <code>if</code> preguntando de qué clase es cada uno.</td></tr>
+    <tr><td>Combo.minutosPreparacion()</td><td>El mayor de los items que sean <code>Preparable</code>, más 3 de armado. No todos lo son: usen <code>if (items[i] instanceof Preparable)</code>. Estación: <code>"ARMADO"</code>.</td></tr>
+    <tr><td>aplicarDescuento(pct)</td><td>Fuera de 0–100 → <code>IllegalArgumentException</code>. Lo guarda y devuelve el precio nuevo.</td></tr>
+    <tr><td>tieneDescuento()</td><td><code>true</code> si el porcentaje es mayor que 0.</td></tr>
+  </table>
+  </div>
+
+  <h3>Para compilar solo lo suyo</h3>
+  <pre>javac Producto.java Preparable.java Descontable.java Bebida.java Combo.java</pre>
+
+  <h3>Cómo saben que quedó bien</h3>
+  <ul class="simple">
+    <li><span class="mono">[OK] G2 cumple Preparable, contrato del G1 (Bebida)</span> — sección C</li>
+    <li><span class="mono">[OK] G2 cumple Preparable, contrato del G1 (Combo)</span> — sección C</li>
+    <li><span class="mono">[OK] El for polimorfico suma las 4 clases</span> — sección D</li>
+    <li><span class="mono">[OK] Precio negativo rechazado</span> — sección F</li>
+  </ul>
+
+  <div class="nota"><b>Si terminan antes:</b> hagan que un Combo pueda contener
+  otro Combo y prueben qué pasa. ¿Se rompe algo? ¿Por qué el código de
+  <code>calcularPrecio()</code> no necesitó cambiar ni una línea?</div>
+
+  <div class="pie"><span>GRUPO 2 · BARRA Y COMBOS</span><span>DUOC DELIVERY</span></div>
+</section>
+
+<!-- ============ GRUPO 3 ============ -->
+<section class="ficha g3">
+  <div class="comanda">
+    <div class="quien">
+      <span class="num">3</span>
+      <span class="rol"><small>Grupo</small>Pedido</span>
+    </div>
+    <div class="sello">
+      Pedido.java<br>Facturable.java
+    </div>
+  </div>
+  <div class="tira">
+    <span>1 clase, la más grande</span>
+    <span><b>3</b> calcularTotal()</span>
+    <span><b>2</b> agregar()</span>
+    <span>static + final</span>
+  </div>
+
+  <p class="lede">Ustedes escriben la única clase que <b>no</b> hereda de
+  <code>Producto</code>, y la que usa el trabajo de todos los demás. En este
+  archivo viven cuatro conceptos a la vez: composición, polimorfismo,
+  sobrecarga y <code>static</code>. Es la clase más grande del taller: repártanse
+  los métodos entre ustedes.</p>
+
+  <h3>Los dos contratos</h3>
+  <div class="contratos">
+    <div class="contrato propio">
+      <span class="tipo">Ustedes lo escriben</span>
+      <span class="nombre">Facturable</span>
+      <ul>
+        <li>String detalleBoleta()</li>
+        <li>double totalConIVA()</li>
+      </ul>
+      <span class="quien-mas">Está obligado a cumplirlo el <b>Grupo 4</b>, en MedioPago.
+      <b>Escríbanla ustedes</b> en <code>Facturable.java</code>: llega vacía, con la
+      especificación en su Javadoc. Ojo con la decisión de diseño: la boleta
+      <b>no</b> la emite el pedido, la emite el medio de pago.</span>
+    </div>
+    <div class="contrato">
+      <span class="tipo">Deben cumplirlo</span>
+      <span class="nombre">Descontable</span>
+      <ul>
+        <li>double aplicarDescuento(double pct)</li>
+        <li>boolean tieneDescuento()</li>
+      </ul>
+      <span class="quien-mas">Lo escribe el <b>Grupo 2</b>.</span>
+    </div>
+  </div>
+
+  <h3>Lo que tiene que hacer cada método</h3>
+  <div class="tabla-envoltorio">
+  <table>
+    <tr><th>Método</th><th>Regla</th></tr>
+    <tr><td>Pedido(cliente)</td><td>Cliente vacío o <code>null</code> → <code>IllegalArgumentException</code>. Sube el contador <code>static</code> y lo usa como número de este pedido. Arreglo de capacidad 20. <b>Ojo:</b> <code>numero</code> es <code>final</code>, hay que asignarlo sí o sí acá.</td></tr>
+    <tr><td>agregar(Producto)</td><td>Sobrecarga corta. Reutilicen la otra.</td></tr>
+    <tr><td>agregar(Producto, int)</td><td><code>null</code> o veces ≤ 0 → <code>IllegalArgumentException</code>. Si ya no cabe → <code>IllegalStateException</code>.</td></tr>
+    <tr><td>calcularTotal()</td><td><b>El for polimórfico</b>, lo más importante que van a escribir hoy. Suma <code>items[i].calcularPrecio()</code> y aplica el descuento. Ese método está escrito por cuatro grupos distintos y ustedes no necesitan saber cuál es cuál.</td></tr>
+    <tr><td>calcularTotal(double)</td><td>El total más la propina. Propina negativa → excepción.</td></tr>
+    <tr><td>calcularTotal(Cobrable)</td><td>El total más el despacho. <b>Fíjense en el tipo del parámetro: es una interfaz, no una clase.</b> Al pedido no le importa si reparte una moto o una bicicleta, solo exige que sepa cobrar.</td></tr>
+    <tr><td>detalle()</td><td>Texto de varias líneas: encabezado, una línea por item con <code>describir()</code>, y el total.</td></tr>
+    <tr><td>getPedidosEmitidos()</td><td><code>static</code>: cuántos pedidos lleva el programa completo, no este objeto.</td></tr>
+    <tr><td>aplicarDescuento(pct)</td><td>Fuera de 0–100 → <code>IllegalArgumentException</code>. Devuelve el total nuevo.</td></tr>
+  </table>
+  </div>
+
+  <h3>Para compilar solo lo suyo</h3>
+  <pre>javac Producto.java Descontable.java Cobrable.java Pedido.java</pre>
+
+  <h3>Cómo saben que quedó bien</h3>
+  <ul class="simple">
+    <li><span class="mono">[OK] G3 cumple Descontable, contrato del G2</span> — sección C</li>
+    <li><span class="mono">[OK] agregar(p) + agregar(p,2) dejan 3 items</span> — sección E</li>
+    <li><span class="mono">[OK] calcularTotal(bici) = total + despacho</span> — sección E</li>
+    <li><span class="mono">[OK] Cada pedido recibe un numero distinto</span> — sección H</li>
+  </ul>
+
+  <div class="nota"><b>Si terminan antes:</b> agreguen una cuarta sobrecarga,
+  <code>calcularTotal(Cobrable despacho, double propina)</code>, y expliquen en
+  el cierre por qué el compilador nunca se confunde entre las cuatro.</div>
+
+  <div class="pie"><span>GRUPO 3 · PEDIDO</span><span>DUOC DELIVERY</span></div>
+</section>
+
+<!-- ============ GRUPO 4 ============ -->
+<section class="ficha g4">
+  <div class="comanda">
+    <div class="quien">
+      <span class="num">4</span>
+      <span class="rol"><small>Grupo</small>Pagos</span>
+    </div>
+    <div class="sello">
+      MedioPago.java<br>Tarjeta.java · Efectivo.java<br>Cobrable.java
+    </div>
+  </div>
+  <div class="tira">
+    <span><b>clase abstracta propia</b></span>
+    <span>2 hijas</span>
+    <span>IVA 19%</span>
+    <span>emiten la boleta</span>
+  </div>
+
+  <p class="lede">Ustedes escriben la <b>segunda clase abstracta del sistema</b>,
+  y esa es toda la gracia de su parte: van a decidir qué se escribe una sola vez
+  en el padre y qué está obligada a responder cada hija. El banco de pruebas va
+  a intentar hacer <code>new MedioPago(...)</code> y <b>espera que falle</b>.</p>
+
+  <h3>Los dos contratos</h3>
+  <div class="contratos">
+    <div class="contrato propio">
+      <span class="tipo">Ustedes lo escriben</span>
+      <span class="nombre">Cobrable</span>
+      <ul>
+        <li>double montoACobrar()</li>
+        <li>boolean cobrar(double monto)</li>
+      </ul>
+      <span class="quien-mas">Está obligado a cumplirlo el <b>Grupo 5</b>, en Repartidor, y el
+      <b>Grupo 3</b> lo usa como tipo de parámetro en una de sus sobrecargas:
+      dos grupos dependen de ustedes. <b>Escríbanla</b> en <code>Cobrable.java</code>:
+      llega vacía, con la especificación en su Javadoc.</span>
+    </div>
+    <div class="contrato">
+      <span class="tipo">Deben cumplirlo</span>
+      <span class="nombre">Facturable</span>
+      <ul>
+        <li>String detalleBoleta()</li>
+        <li>double totalConIVA()</li>
+      </ul>
+      <span class="quien-mas">Lo escribe el <b>Grupo 3</b>. Se implementa
+      <b>una sola vez</b>, en el padre abstracto.</span>
+    </div>
+  </div>
+
+  <h3>Lo que tiene que hacer cada método</h3>
+  <div class="tabla-envoltorio">
+  <table>
+    <tr><th>Método</th><th>Regla</th></tr>
+    <tr><td>MedioPago(titular, monto)</td><td>Monto negativo → <code>IllegalArgumentException</code>.</td></tr>
+    <tr><td>abstract recargo()</td><td>No lo escriben: lo <b>declaran</b>. Es lo único que de verdad diferencia a una tarjeta de un pago en efectivo.</td></tr>
+    <tr><td>abstract nombreMedio()</td><td>Igual: cada hija dice cómo se llama.</td></tr>
+    <tr><td>totalConIVA()</td><td><code>(monto + recargo()) × 1.19</code>. Fíjense: llama a <code>recargo()</code>, que en esta clase todavía no existe. Eso es polimorfismo.</td></tr>
+    <tr><td>detalleBoleta()</td><td>Una línea tipo <span class="mono">BOLETA | TARJETA 3 cuota(s) | Camila | neto $10000 | recargo $600 | TOTAL $12614</span>. Para formatear usen <code>Producto.pesos(monto)</code>.</td></tr>
+    <tr><td>Tarjeta(titular, monto)</td><td>Sobrecarga corta: una cuota.</td></tr>
+    <tr><td>Tarjeta(…, cuotas)</td><td>Solo de 1 a 12 cuotas.</td></tr>
+    <tr><td>Tarjeta.recargo()</td><td>0 si es una cuota. Si no, 2% del monto por cada cuota.</td></tr>
+    <tr><td>Efectivo.recargo()</td><td>Cero, siempre.</td></tr>
+    <tr><td>Efectivo.vuelto()</td><td>Método propio, que no existe en el padre: lo que pagó menos el total con IVA. Si diera negativo, 0.</td></tr>
+  </table>
+  </div>
+
+  <h3>Para compilar solo lo suyo</h3>
+  <pre>javac Producto.java Facturable.java MedioPago.java Tarjeta.java Efectivo.java</pre>
+
+  <h3>Cómo saben que quedó bien</h3>
+  <ul class="simple">
+    <li><span class="mono">[OK] MedioPago (G4) es abstracta → InstantiationException</span> — sección A</li>
+    <li><span class="mono">[OK] Tarjeta extends MedioPago</span> — sección B</li>
+    <li><span class="mono">[OK] G4 cumple Facturable, contrato del G3</span> — sección C</li>
+    <li><span class="mono">[OK] Facturable calcula el IVA (10000 → 11900)</span> — sección C</li>
+  </ul>
+
+  <div class="nota"><b>Si terminan antes:</b> agreguen <code>Transferencia</code>
+  como tercera hija y cuenten en el cierre <b>cuántas líneas</b> les costó.
+  Ese número es el argumento entero a favor de las clases abstractas.</div>
+
+  <div class="pie"><span>GRUPO 4 · PAGOS</span><span>DUOC DELIVERY</span></div>
+</section>
+
+<!-- ============ GRUPO 5 ============ -->
+<section class="ficha g5">
+  <div class="comanda">
+    <div class="quien">
+      <span class="num">5</span>
+      <span class="rol"><small>Grupo</small>Reparto</span>
+    </div>
+    <div class="sello">
+      Repartidor.java<br>RepartidorMoto.java · RepartidorBici.java<br>Calificable.java
+    </div>
+  </div>
+  <div class="tira">
+    <span><b>clase abstracta propia</b></span>
+    <span>2 hijas</span>
+    <span><b>super.montoACobrar()</b></span>
+    <span>cruzan la jerarquía</span>
+  </div>
+
+  <p class="lede">Ustedes escriben la <b>tercera clase abstracta</b> y, sobre
+  todo, son dueños de la interfaz más importante del taller.
+  <code>Calificable</code> la implementan su Repartidor <b>y</b> la Pizza del
+  Grupo 1, que no comparten ninguna clase padre. Ninguna herencia puede unir
+  esas dos cosas; una interfaz sí. En la demo van a aparecer las dos en el
+  mismo arreglo.</p>
+
+  <h3>Los dos contratos</h3>
+  <div class="contratos">
+    <div class="contrato propio">
+      <span class="tipo">Ustedes lo escriben</span>
+      <span class="nombre">Calificable</span>
+      <ul>
+        <li>void calificar(int estrellas)</li>
+        <li>double promedioEstrellas()</li>
+      </ul>
+      <span class="quien-mas">Está obligado a cumplirlo el <b>Grupo 1</b>, en Pizza y Sushi, y
+      ustedes también lo implementan en Repartidor. <b>Escríbanla</b> en
+      <code>Calificable.java</code>: llega vacía, con la especificación en su Javadoc.</span>
+    </div>
+    <div class="contrato">
+      <span class="tipo">Deben cumplirlo</span>
+      <span class="nombre">Cobrable</span>
+      <ul>
+        <li>double montoACobrar()</li>
+        <li>boolean cobrar(double monto)</li>
+      </ul>
+      <span class="quien-mas">Lo escribe el <b>Grupo 4</b>.</span>
+    </div>
+  </div>
+
+  <h3>Lo que tiene que hacer cada método</h3>
+  <div class="tabla-envoltorio">
+  <table>
+    <tr><th>Método</th><th>Regla</th></tr>
+    <tr><td>Repartidor(nombre)</td><td>Nombre vacío o <code>null</code> → <code>IllegalArgumentException</code>. Entregas en 0.</td></tr>
+    <tr><td>abstract tarifaBase()</td><td>Lo declaran, no lo escriben: cada vehículo cobra distinto.</td></tr>
+    <tr><td>abstract vehiculo()</td><td>Igual.</td></tr>
+    <tr><td>montoACobrar()</td><td>En el padre: la tarifa base y nada más.</td></tr>
+    <tr><td>cobrar(double)</td><td>Si el monto no alcanza para <code>montoACobrar()</code>, devuelve <code>false</code> y no entrega. Si alcanza: suma una entrega, suma lo recaudado y devuelve <code>true</code>.</td></tr>
+    <tr><td>calificar(int)</td><td>Solo de 1 a 5. Fuera de rango → <code>IllegalArgumentException</code>.</td></tr>
+    <tr><td>promedioEstrellas()</td><td>Suma ÷ votos, y 0 si todavía no hay ninguno.</td></tr>
+    <tr><td>describir()</td><td>Algo como <span class="mono">Ignacio en MOTO (3 entregas, 4.5 estrellas)</span>.</td></tr>
+    <tr><td>Moto: tarifaBase()</td><td>$2500. Vehículo: <code>"MOTO"</code>.</td></tr>
+    <tr><td>Moto: montoACobrar()</td><td><b>Sobrescribe al padre:</b> $1000 más si está lloviendo. No repitan la fórmula, llamen a <code>super.montoACobrar()</code> y súmenle encima.</td></tr>
+    <tr><td>Bici</td><td>$1500 y <code>"BICICLETA"</code>. <b>No</b> sobrescribe <code>montoACobrar()</code>: se conforma con lo que hereda. Comparen las dos hijas, ahí está toda la herencia en dos archivos.</td></tr>
+  </table>
+  </div>
+
+  <h3>Para compilar solo lo suyo</h3>
+  <pre>javac Cobrable.java Calificable.java Repartidor.java RepartidorMoto.java RepartidorBici.java</pre>
+
+  <h3>Cómo saben que quedó bien</h3>
+  <ul class="simple">
+    <li><span class="mono">[OK] Repartidor (G5) es abstracta → InstantiationException</span> — sección A</li>
+    <li><span class="mono">[OK] G5 cumple Cobrable, contrato del G4</span> — sección C</li>
+    <li><span class="mono">[OK] Producto y Repartidor NO comparten clase padre</span> — sección D</li>
+    <li><span class="mono">[OK] …pero caben en el mismo arreglo Calificable[]</span> — sección D</li>
+  </ul>
+
+  <div class="nota"><b>Si terminan antes:</b> agreguen <code>RepartidorAuto</code>,
+  que cobra por kilómetro. Después respondan: si <code>Calificable</code> fuera
+  una clase abstracta en vez de una interfaz, ¿podría la Pizza del Grupo 1
+  seguir siendo calificable? ¿Por qué no?</div>
+
+  <div class="pie"><span>GRUPO 5 · REPARTO</span><span>DUOC DELIVERY</span></div>
+</section>

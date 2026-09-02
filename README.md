@@ -230,3 +230,29 @@ Sistema de biblioteca que use **las 6 demos juntas**:
 
 Se entrega en Java **y** en Python, y en la defensa el alumno explica
 las tres diferencias mas importantes que encontro entre ambas versiones.
+
+---
+
+## Taller grupal: `09-taller-grupal`
+
+Una sesion de **2 horas con 5 grupos** construyendo un solo programa en Java.
+El profesor entrega la clase raiz abstracta y los dos `main`; cada grupo
+escribe sus clases y es **dueno de una interfaz que otro grupo esta obligado
+a implementar**. El grafo de contratos es un anillo cerrado: si un grupo no
+entrega, no compila nadie.
+
+```
+Preparable (G1) -> G2   Descontable (G2) -> G3   Facturable (G3) -> G4
+Cobrable (G4)   -> G5   Calificable (G5) -> G1
+```
+
+Trae `taller/` (lo que se copia a los PC: 9 archivos listos + 11 stubs con
+`// TODO` que **no compilan** hasta que los rellenen), `solucion-profesor/`
+(los 20 archivos terminados, 40 de 40 pruebas OK) y `fichas-imprimibles.html`
+con las seis fichas de papel. El guion completo esta en su `README.md`.
+
+Ademas de repasar las ocho demos, agrega dos cosas que las demos no cubren:
+un **banco de pruebas** que imprime `[OK]/[FALLA]`, y la unica forma de
+comprobar en tiempo de ejecucion que una clase es abstracta &mdash; por
+reflexion, porque `new Producto(...)` no lanza una excepcion: **no compila**,
+y ningun `try/catch` puede atrapar eso.
