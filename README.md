@@ -1,5 +1,5 @@
 # POO en Java y su paralelo en Python
-### Material de clase: 8 demos ejecutables + 60 ejercicios en 9 hojas
+### Material de clase: 9 demos ejecutables + 76 ejercicios en 10 hojas
 
 Cada demo es **el mismo programa escrito dos veces**, con la **misma salida por
 pantalla**. La idea es que el alumno vea que el concepto es uno solo y lo que
@@ -62,13 +62,15 @@ Para limpiar: `rm *.class` y `rm -rf __pycache__`.
 
 Verificado con OpenJDK 17 y Python 3.11. Las 15 demos corren sin errores.
 
-> **La demo 8 es solo Java**, sin par en Python. No es un olvido: es la demo
-> de cierre del curso de Java, con 23 archivos, y duplicarla no aportaba nada
-> que las siete anteriores no muestren ya.
+> **Las demos 8 y 10 son solo Java**, sin par en Python. No es un olvido.
+> La 8 es la demo de cierre del curso, con 23 archivos, y duplicarla no
+> aportaba nada que las siete anteriores no muestren ya. La 10 depende de las
+> excepciones **checked** y de la palabra `throws`, que en Python **no
+> existen**: el paralelo enseñaría lo contrario de lo que hay que enseñar.
 
 ---
 
-## Las 8 demos
+## Las 9 demos
 
 | # | Carpeta | Concepto | El "momento ajá" de la clase |
 |---|---------|----------|------------------------------|
@@ -81,6 +83,8 @@ Verificado con OpenJDK 17 y Python 3.11. Las 15 demos corren sin errores.
 | 7 | `07-interfaces` | Interfaces, interfaz como tipo, interfaz vs abstracta | El pinguino que no vuela |
 | 8 | `08-videojuego` | **Todo junto**: Mundo 1-1 de Mario | El Spiny que no se puede pisar |
 | | | + estado del objeto (PEQUENO/GRANDE) | El mismo golpe, dos resultados |
+| 10 | `10-excepciones` | **Excepciones**: try-catch, throw, throws, propias | Un programa que compila perfecto y se cae con todo |
+| | | checked vs unchecked | El compilador solo te protege de la mitad |
 
 Cada carpeta trae `java/`, `python/` y un `EJERCICIOS.md` con actividades
 graduadas del tipo: **agregar un atributo, agregar un metodo, crear una nueva
@@ -189,7 +193,7 @@ los alumnos conocen de memoria.
 
 ---
 
-## Sugerencia de secuencia (8 sesiones)
+## Sugerencia de secuencia (9 sesiones)
 
 0. **Hoja 00** — una clase, un archivo. 15 minutos, antes de todo lo demas.
 1. **Demos 1 y 2** — la base. No avances hasta que distingan clase de objeto.
@@ -205,7 +209,11 @@ los alumnos conocen de memoria.
 7. **Demo 8** — el Mundo 1-1 de Mario. Integra todo lo anterior en un solo
    ejemplo y sirve de cierre: cuatro personajes, seis enemigos, cuatro
    objetos y cuatro interfaces que cruzan las tres ramas.
-8. **Proyecto integrador** (abajo).
+8. **Demo 10** — excepciones. Va al final a proposito: necesita clases,
+   herencia (la jerarquia de `Exception`), interfaces (`AutoCloseable` en el
+   try-with-resources) y sobre todo un programa lo bastante grande como para
+   que romperlo tenga gracia. Es la unica demo que parte con el codigo roto.
+9. **Proyecto integrador** (abajo).
 
 ## Tres trucos didacticos que funcionan con estas demos
 
@@ -213,7 +221,8 @@ los alumnos conocen de memoria.
   `Fraccion@1b6d3586` *antes* de enseñar `toString()`. El concepto se entiende solo.
 - **Que rompan el codigo a proposito.** Los ejercicios E2.1, E3.5, E4.2 y E6.6
   piden provocar el error y leer el mensaje del compilador. Aprenden mas del
-  error que del codigo que funciona.
+  error que del codigo que funciona. La demo 10 lleva esto al extremo: **todo
+  el proyecto llega roto** y la primera media hora de la sesion es botarlo.
 - **Corre las dos versiones lado a lado.** Dos terminales, misma salida.
   Es la demostracion mas directa de que el concepto es independiente del lenguaje.
 
@@ -256,3 +265,39 @@ un **banco de pruebas** que imprime `[OK]/[FALLA]`, y la unica forma de
 comprobar en tiempo de ejecucion que una clase es abstracta &mdash; por
 reflexion, porque `new Producto(...)` no lanza una excepcion: **no compila**,
 y ningun `try/catch` puede atrapar eso.
+
+---
+
+## Demo 10: `10-excepciones`
+
+**Un programa que compila perfecto y se cae con todo.** **Cinco archivos**
+Java, cero `try-catch`. El alumno lo corre, lo bota de las 12 formas posibles
+que estan listadas en `TABLA-EXCEPCIONES.md`, y recien entonces lo arregla.
+Esta pensada para resolverse **en una sola clase de 90 minutos**.
+
+El gancho es el `throws Exception` del `main`: esa firma es lo unico que hace
+que el proyecto compile sin manejar nada. Borrarla (ejercicio E10.0) hace
+aparecer 6 errores de excepciones **checked** que antes no existian &mdash; y
+deja a la vista que las **unchecked**, que siguen sin aparecer, son 11 de las
+12 formas de botar el programa. El compilador solo te protege de la mitad.
+
+Cubre **10 excepciones nativas** y **3 propias**, checked y unchecked
+mezcladas a proposito. `FileNotFoundException` es la unica checked del JDK en
+toda la demo: borrarle el `throws` al metodo que la lanza y ver a `javac`
+plantarse es la mejor definicion de "checked" que se puede dar en clase.
+
+Y la leccion que no esta en el titulo: de los 12 arreglos del ejercicio,
+**solo dos son un `try-catch`**. El resto son validaciones puestas antes, una
+busqueda que deja de devolver `null`, un `instanceof` en vez de un cast a
+ciegas y un `try-with-resources`. El `try-catch` aparece recien en el segundo
+bloque y solo en `Demo10`, que es el unico lugar donde alguien puede
+**decidir que hacer** con el error. Un curso que parte por el `try-catch`
+produce alumnos que envuelven todo en `catch (Exception e) { }` y siguen.
+
+Una nota para la clase: `Excepciones.java` guarda las tres excepciones propias
+en un solo archivo, rompiendo a proposito la regla de la hoja 00. Es legal
+porque ninguna es `public`, y conviene decirlo en voz alta: es justo la
+excepcion a una regla que el curso viene aplicando desde el primer dia.
+
+Igual que el taller 09, la carpeta `solucion-profesor/` **no se publica**
+(esta en el `.gitignore`): los alumnos tienen acceso a este repo.
