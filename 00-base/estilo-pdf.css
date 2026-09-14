@@ -1,0 +1,109 @@
+
+  @page { size: A4; margin: 20mm 18mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #1a1a1a;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+  h1, h2, h3, h4 { line-height: 1.25; page-break-after: avoid; break-after: avoid; }
+  h1 {
+    font-size: 20pt; margin: 0 0 6mm 0; padding-bottom: 3mm;
+    border-bottom: 2px solid #1a1a1a;
+  }
+  h2 {
+    font-size: 15pt; margin: 10mm 0 4mm 0; padding-bottom: 1.5mm;
+    border-bottom: 1px solid #bbb;
+  }
+  h3 { font-size: 12.5pt; margin: 7mm 0 3mm 0; color: #14509c; }
+  h4 { font-size: 11pt; margin: 5mm 0 2mm 0; }
+  p, ul, ol { margin: 0 0 3mm 0; }
+  ul, ol { padding-left: 6mm; }
+  li { margin-bottom: 1mm; }
+  li > p { margin: 0; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 6mm 0; }
+  a { color: #14509c; text-decoration: none; }
+  strong { color: #000; }
+
+  code {
+    font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 9.3pt;
+    background: #f0f1f3;
+    border: 1px solid #dcdde1;
+    border-radius: 3px;
+    padding: 0.5px 4px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre {
+    background: #f6f7f9;
+    border: 1px solid #dcdde1;
+    border-left: 3px solid #6b7280;
+    border-radius: 4px;
+    padding: 3mm 4mm;
+    margin: 3mm 0 4mm 0;
+    overflow-wrap: break-word;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  pre code {
+    background: none; border: none; padding: 0; font-size: 9pt; white-space: pre-wrap;
+  }
+
+  blockquote {
+    margin: 3mm 0 4mm 0;
+    padding: 2.5mm 4mm;
+    border-left: 3px solid #14509c;
+    background: #eef3fb;
+    color: #1a1a1a;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  blockquote > p:last-child { margin-bottom: 0; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 3mm 0 5mm 0;
+    font-size: 9.5pt;
+    page-break-inside: auto;
+  }
+  table tr { page-break-inside: avoid; break-inside: avoid; }
+  th, td {
+    border: 1px solid #c6c9ce;
+    padding: 2mm 3mm;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-word;
+  }
+  th {
+    background: #dbe6f6;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  tbody tr:nth-child(even) { background: #f7f8fa; }
+  table code { background: #ffffff; }
+
+  details {
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    margin: 3mm 0 4mm 0;
+    padding: 2mm 4mm;
+    background: #fafafa;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  details > summary {
+    font-weight: 700;
+    cursor: default;
+    margin: -2mm -4mm 2mm -4mm;
+    padding: 2mm 4mm;
+    background: #eceef1;
+    border-bottom: 1px solid #dcdde1;
+    border-radius: 4px 4px 0 0;
+  }
+  details pre { margin-top: 0; }

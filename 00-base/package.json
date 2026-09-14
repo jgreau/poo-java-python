@@ -1,0 +1,12 @@
+{
+  "name": "00-base-pdf",
+  "private": true,
+  "description": "Genera los .pdf de 00-base a partir de sus .md. Ver generar-pdf.js.",
+  "scripts": {
+    "pdf": "node generar-pdf.js"
+  },
+  "dependencies": {
+    "marked": "^12.0.0",
+    "puppeteer-core": "^23.0.0"
+  }
+}

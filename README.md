@@ -7,6 +7,26 @@ cambia es la sintaxis: eso desarma la sensacion de "estoy aprendiendo dos cosas"
 
 ---
 
+## Antes de todo: `00-base`
+
+Un repaso de **Java desde cero**, para hacer antes de la demo 1: el `main`,
+`println` y `printf`, variables, `Scanner`, `if`/`switch`, `while`, `for`,
+arreglos y metodos `static`. Despues, clases propias con metodos `static`
+(como `Math`), validaciones que no dejan caer el programa, y sobrecarga como
+primera forma de polimorfismo. Son **13 pasos**, y el ultimo junta todo en una
+calculadora de notas.
+
+El alumno sigue `00-base/PASO-A-PASO.md` y **escribe** el codigo, no lo copia;
+cada paso trae errores para provocar a proposito y su equivalente en Python.
+Todo esta organizado por paso, en `00-base/pasoNN/` (13 carpetas, **68
+ejercicios** numerados B1.1 a B13.5): ahi conviven el codigo de referencia del
+paso, el enunciado de sus ejercicios, la **plantilla `.java`** de cada uno
+(con los `// TODO` donde va el codigo) y la **solucion explicada** con la
+salida real del programa. Ningun ejercicio depende de otra persona: todo se
+puede resolver y comprobar solo. El punto de entrada es `00-base/README.md`.
+
+---
+
 ## Estructura: una clase, un archivo
 
 Cada clase vive en su propio archivo, como en cualquier proyecto real.
@@ -194,6 +214,9 @@ los alumnos conocen de memoria.
 ---
 
 ## Sugerencia de secuencia (9 sesiones)
+
+Si el curso llega sin Java, antes de todo va `00-base`. Si ya lo vio, se puede
+dejar como material de consulta.
 
 0. **Hoja 00** — una clase, un archivo. 15 minutos, antes de todo lo demas.
 1. **Demos 1 y 2** — la base. No avances hasta que distingan clase de objeto.
