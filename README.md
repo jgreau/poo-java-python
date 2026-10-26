@@ -7,6 +7,19 @@ cambia es la sintaxis: eso desarma la sensacion de "estoy aprendiendo dos cosas"
 
 ---
 
+## Antes de la demo 1: `00-abstraccion`
+
+Una guia para **leer**, no para programar: explica el "para que" de las clases
+con analogias (planos y casas) antes de ver una sola linea de sintaxis. Cubre
+clase y objeto, encapsulamiento, herencia, polimorfismo, composicion, clase
+abstracta e interfaz, y repite el mismo esqueleto en **11 areas** (medicina,
+musica, juegos, cocina, futbol, banco, transporte, mascotas, colegio, redes
+sociales y arquitectura). Los ejemplos son programas
+Java ejecutables, y la guia trae ejercicios de diseno sin codigo. Punto de entrada:
+`00-abstraccion/ABSTRACCION.md` (y su `.pdf`).
+
+---
+
 ## Antes de todo: `00-base`
 
 Un repaso de **Java desde cero**, para hacer antes de la demo 1: el `main`,
